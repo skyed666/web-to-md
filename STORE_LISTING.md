@@ -16,7 +16,7 @@
 
 ## 📝 详细描述（Description，必填，≤16,000 字符）
 ```
-网页转换器让你一键把任意网页变成 Markdown 或 JSON，专为喂给 ChatGPT、Claude 等 AI 大模型设计。
+网页转换器让你一键把任意网页变成 Markdown 或 JSON。
 
 ✨ 核心功能
 • 网页 → Markdown：提取干净正文，去掉广告、导航等干扰
