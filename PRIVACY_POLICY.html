@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网页转换器 - 隐私政策</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #1f2937;
+      line-height: 1.7;
+    }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; margin-top: 28px; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+    .updated { color: #6b7280; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>网页转换器 - 隐私政策</h1>
+  <p class="updated">最后更新：2026-06-15</p>
+
+  <p>本扩展（以下简称"网页转换器"）尊重并保护用户隐私。本政策如实说明扩展如何处理数据。</p>
+
+  <h2>1. 我们不收集的个人数据</h2>
+  <p>本扩展<strong>没有服务器、没有后端</strong>，<strong>不收集、不存储、不传输您的任何个人数据</strong>到我们的服务器。我们无法访问您的浏览历史、账号信息或其它身份数据。</p>
+
+  <h2>2. 数据流向</h2>
+  <p>当您主动点击"转换"按钮时，扩展会向您指定的网页地址发起请求，数据流向如下：</p>
+  <ul>
+    <li><strong>远程转换模式</strong>：扩展将您输入的目标网址发送至第三方服务 <code>r.jina.ai</code>（Jina AI Reader API）。该服务抓取目标网页并返回 Markdown/JSON。此请求由您的浏览器直接发起，您的 IP 地址会被 <code>r.jina.ai</code> 看到。</li>
+    <li><strong>本地转换模式</strong>：当远程服务被目标网站的反爬机制拒绝时，扩展会自动回退为由您的浏览器直接抓取目标网页的 HTML，并在本地转换为 Markdown。此过程不经过任何第三方。</li>
+  </ul>
+
+  <h2>3. 请求的权限及用途</h2>
+  <ul>
+    <li><code>activeTab</code>：读取您当前标签页的网址，用于自动填入输入框。不读取页面内容。</li>
+    <li><code>downloads</code>：将转换结果保存为 <code>.md</code> 或 <code>.json</code> 文件。</li>
+    <li><code>host_permissions（所有网站）</code>：在本地转换模式下，您的浏览器需要直接抓取您指定网址的页面。此权限仅用于您主动发起的转换请求。</li>
+  </ul>
+
+  <h2>4. 数据存储</h2>
+  <p>本扩展<strong>不使用</strong> <code>chrome.storage</code>、<code>cookies</code> 或任何本地存储。关闭弹窗后，所有临时状态即被清除，不保留任何痕迹。</p>
+
+  <h2>5. 第三方服务</h2>
+  <p>本扩展仅使用以下第三方服务/库：</p>
+  <ul>
+    <li><strong>Jina AI Reader API</strong>（<code>r.jina.ai</code>）：用于远程网页转 Markdown。其隐私政策请见 <a href="https://jina.ai/privacy">jina.ai/privacy</a>。</li>
+    <li><strong>Turndown</strong>（MIT 许可）：开源 JavaScript 库，在本地模式下将 HTML 转为 Markdown。完全在本地运行，不发送任何数据。</li>
+  </ul>
+
+  <h2>6. 数据安全</h2>
+  <p>所有请求均通过 HTTPS 加密传输。转换结果仅在您的浏览器内存中临时存在，供您预览、复制或下载。</p>
+
+  <h2>7. 儿童隐私</h2>
+  <p>本扩展不针对 13 岁以下儿童，也不 knowingly 收集儿童信息。</p>
+
+  <h2>8. 政策变更</h2>
+  <p>如本政策有重大变更，将在扩展的更新说明中告知。</p>
+
+  <h2>9. 联系方式</h2>
+  <p>如对本政策有疑问，请通过 Chrome Web Store 扩展页面提供的联系方式与我们取得联系。</p>
+</body>
+</html>

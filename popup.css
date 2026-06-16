@@ -1,0 +1,258 @@
+/* ===== 基础变量 ===== */
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary: #f3f4f6;
+  --secondary-hover: #e5e7eb;
+  --ghost-hover: #f0f0f3;
+  --text: #1f2937;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  --radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
+    Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.container {
+  width: 420px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  background: var(--bg);
+}
+
+/* ===== 头部 ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo h1 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 11px;
+  color: var(--primary);
+  background: #eef2ff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ===== 表单 ===== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: 9px 11px;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.format-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+/* ===== 按钮 ===== */
+.btn {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--text);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--secondary-hover);
+}
+
+/* ===== 状态提示 ===== */
+.status-box {
+  margin-top: 12px;
+  padding: 9px 11px;
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-info {
+  background: #eef2ff;
+  color: var(--primary);
+}
+
+.status-success {
+  background: #f0fdf4;
+  color: var(--success);
+}
+
+.status-error {
+  background: #fef2f2;
+  color: var(--error);
+}
+
+/* 本地模式（远程被反爬挡住、自动回退到本地抓取） */
+.status-local {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== 结果区 ===== */
+.result-wrapper {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.result-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.result-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.result {
+  flex: 1;
+  max-height: 320px;
+  overflow: auto;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-ghost {
+  flex: 1;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--ghost-hover);
+}
+
+/* ===== 页脚 ===== */
+.footer {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ===== 工具类 ===== */
+.hidden {
+  display: none !important;
+}

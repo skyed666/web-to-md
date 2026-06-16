@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "网页转换器 - Markdown / JSON",
+  "version": "1.0.0",
+  "description": "一键将任意网页转换为 Markdown 或 JSON（使用您的 IP 直接请求，无需后端）。Chrome 与 Edge 通用。",
+  "author": "你的名字 <your-email@example.com>",
+  "homepage_url": "https://github.com/你的用户名/网页转换器",
+  "minimum_chrome_version": "88",
+  "permissions": [
+    "activeTab",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://r.jina.ai/*",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "网页转换器 - Markdown / JSON",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

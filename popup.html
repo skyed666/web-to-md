@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网页转换器 - Markdown / JSON</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" fill="#4f46e5"/>
+          <path d="M9 16V8l3 4 3-4v8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1>网页转换器</h1>
+      </div>
+      <span class="badge">免费</span>
+    </header>
+
+    <section class="form">
+      <label class="label" for="urlInput">目标网址</label>
+      <div class="url-row">
+        <input
+          id="urlInput"
+          type="text"
+          class="input"
+          placeholder="https://example.com"
+          spellcheck="false"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="format-buttons">
+        <button id="btnMarkdown" class="btn btn-primary" type="button">
+          转 Markdown
+        </button>
+        <button id="btnJson" class="btn btn-secondary" type="button">
+          转 JSON
+        </button>
+      </div>
+    </section>
+
+    <section id="statusBox" class="status-box hidden" aria-live="polite"></section>
+
+    <section class="result-wrapper hidden" id="resultWrapper">
+      <div class="result-header">
+        <span class="result-title" id="resultTitle">转换结果</span>
+        <span class="result-meta" id="resultMeta"></span>
+      </div>
+      <pre id="result" class="result" tabindex="0"></pre>
+      <div class="action-buttons">
+        <button id="btnCopy" class="btn btn-ghost" type="button">复制</button>
+        <button id="btnDownload" class="btn btn-ghost" type="button">下载</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      使用您的 IP 直接请求转换服务，限速 20 次/分钟，无需后端
+    </footer>
+  </div>
+
+  <script src="lib/turndown.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
