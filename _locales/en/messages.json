@@ -1,0 +1,66 @@
+{
+  "ext_name": {
+    "message": "Web to Markdown / JSON"
+  },
+  "ext_description": {
+    "message": "Convert any webpage to clean Markdown or JSON with one click. Feeds AI/LLMs directly. Chrome & Edge compatible."
+  },
+  "ext_title": {
+    "message": "Web to Markdown / JSON"
+  },
+
+  "header_title": { "message": "Web Converter" },
+  "badge": { "message": "Free · No backend" },
+  "label_url": { "message": "Target URL" },
+  "placeholder_url": { "message": "https://example.com" },
+  "btn_markdown": { "message": "To Markdown" },
+  "btn_json": { "message": "To JSON" },
+  "result_title_md": { "message": "Markdown result" },
+  "result_title_json": { "message": "JSON result" },
+  "btn_copy": { "message": "Copy" },
+  "btn_download": { "message": "Download" },
+  "footer": {
+    "message": "Requests go directly from your IP to the conversion service. Rate limit: 20 requests/min. No backend."
+  },
+  "footer_lang_note": {
+    "message": "The extension name follows your browser's language."
+  },
+
+  "status_loading": { "message": "Converting, please wait…" },
+  "status_success": { "message": "Conversion done ✓" },
+  "status_local": {
+    "message": "Conversion done (local mode: remote blocked by anti-bot, fetched locally via your browser)"
+  },
+  "status_copied": { "message": "Copied to clipboard ✓" },
+  "status_download_started": {
+    "message": "Download started: $FILENAME$",
+    "placeholders": { "filename": { "content": "$1" } }
+  },
+  "err_empty_url": { "message": "Please enter or paste a URL first" },
+  "err_bad_url": { "message": "Invalid URL. Must start with http:// or https://" },
+  "err_rate_limit": { "message": "Too many requests. Free tier limit is 20 requests/min. Please wait and retry." },
+  "err_http": {
+    "message": "Network error: HTTP $STATUS$",
+    "placeholders": { "status": { "content": "$1" } }
+  },
+  "err_timeout": { "message": "Request timed out (30s). Check your network and retry." },
+  "err_no_service": { "message": "Cannot reach the conversion service. Check your network and retry." },
+  "err_local_fetch": {
+    "message": "Local fetch failed: $DETAIL$",
+    "placeholders": { "detail": { "content": "$1" } }
+  },
+  "err_local_unreachable": { "message": "This page can't be fetched locally either (may require login or is anti-bot protected)." },
+  "err_empty_content": { "message": "Fetched page content is empty." },
+  "err_no_lib": { "message": "Local conversion library not loaded." },
+  "err_blocked_local": { "message": "This page is protected by anti-bot (e.g. Cloudflare). Local mode can't extract content either." },
+  "err_copy_failed": { "message": "Copy failed. Please select the result manually and copy." },
+  "err_download_failed": {
+    "message": "Download failed: $DETAIL$",
+    "placeholders": { "detail": { "content": "$1" } }
+  },
+  "err_generic": {
+    "message": "Conversion failed: $DETAIL$",
+    "placeholders": { "detail": { "content": "$1" } }
+  },
+  "err_unknown": { "message": "Unknown error" }
+}

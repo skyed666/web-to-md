@@ -1,13 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "网页转换器 - Markdown / JSON",
-  "version": "1.0.0",
-  "description": "将当前网页转换为 Markdown 或 JSON 并下载保存。",
+  "name": "__MSG_ext_name__",
+  "version": "1.1.0",
+  "description": "__MSG_ext_description__",
+  "default_locale": "en",
   "author": "Shishi",
   "homepage_url": "https://github.com/skyed666/web-to-md",
   "permissions": [
     "activeTab",
-    "downloads"
+    "downloads",
+    "storage"
   ],
   "host_permissions": [
     "https://r.jina.ai/*",
@@ -18,7 +20,13 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "__MSG_ext_title__",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "icons": {
     "16": "icons/icon16.png",

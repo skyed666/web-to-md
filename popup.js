@@ -24,9 +24,153 @@ const ENDPOINT = "https://r.jina.ai/";
 const FETCH_TIMEOUT_MS = 30000;
 
 // ===================================================
-// 1. 打开弹窗时自动填入当前标签页网址
+// 国际化（i18n）工具 —— 支持运行时切换语言
+// 绕开 chrome.i18n.getMessage（它只读、加载时锁定），
+// 改为运行时 fetch 所有 messages.json 到内存，自管语言。
+// ===================================================
+const SUPPORTED_LANGS = ["zh_CN", "en", "zh_TW", "ja"];
+const DEFAULT_LANG = "en";
+
+// 内存中的全部文案：{ zh_CN: {...}, en: {...}, ... }
+let MESSAGES = {};
+// 当前语言
+let currentLang = DEFAULT_LANG;
+
+// DOM 引用：语言下拉框（在 html 中声明）
+const langSelect = document.getElementById("langSelect");
+
+// 加载所有语言的 messages.json 到 MESSAGES
+async function loadAllMessages() {
+  await Promise.all(
+    SUPPORTED_LANGS.map(async (lang) => {
+      const url = chrome.runtime.getURL("_locales/" + lang + "/messages.json");
+      try {
+        const res = await fetch(url);
+        MESSAGES[lang] = await res.json();
+      } catch (e) {
+        // 某语言加载失败时静默跳过，后续回退到 DEFAULT_LANG
+        console.warn("Failed to load locale", lang, e);
+      }
+    })
+  );
+  if (!MESSAGES[DEFAULT_LANG]) {
+    // 连默认语言都加载失败：用空对象兜底，避免后续崩溃
+    MESSAGES[DEFAULT_LANG] = {};
+  }
+}
+
+// 把 chrome 的 UI 语言（如 "zh-CN"、"zh-TW"、"ja"、"en-US"）映射到我们支持的 locale
+function mapUiLang(uiLang) {
+  const l = (uiLang || "").toLowerCase();
+  if (l.startsWith("zh-cn") || l === "zh" || l.startsWith("zh-hans") || l.startsWith("zh-sg")) return "zh_CN";
+  if (l.startsWith("zh-tw") || l.startsWith("zh-hk") || l.startsWith("zh-mo") || l.startsWith("zh-hant")) return "zh_TW";
+  if (l.startsWith("ja")) return "ja";
+  return "en";
+}
+
+// 决定启动时的语言：优先用户已保存的选择 → 否则按浏览器 UI 语言自动检测
+async function detectInitialLang() {
+  try {
+    const stored = await chrome.storage.local.get("lang");
+    if (stored.lang && SUPPORTED_LANGS.includes(stored.lang)) {
+      return stored.lang;
+    }
+  } catch (e) {
+    // storage 读取失败时忽略
+  }
+  return mapUiLang(chrome.i18n.getUILanguage());
+}
+
+// 取本地化文案。substitutions 用于替换 $PLACEHOLDER$ / $1 占位符。
+// 找不到时：回退到 DEFAULT_LANG → 仍找不到回退到 key 本身。
+function i18n(key, substitutions) {
+  const entry = resolveEntry(key);
+  if (!entry || typeof entry.message !== "string") return key;
+  return applyPlaceholders(entry, substitutions);
+}
+
+// 在 currentLang 找不到时回退到 DEFAULT_LANG
+function resolveEntry(key) {
+  if (MESSAGES[currentLang] && MESSAGES[currentLang][key]) {
+    return MESSAGES[currentLang][key];
+  }
+  if (MESSAGES[DEFAULT_LANG] && MESSAGES[DEFAULT_LANG][key]) {
+    return MESSAGES[DEFAULT_LANG][key];
+  }
+  return null;
+}
+
+// 按 Chrome 规范解析占位符：
+//   $XXX$ → 由 placeholders[xxx].content（形如 "$1"）映射到 substitutions[index]
+//   兜底：若 content 不是 $N 形式，直接当成字面量替换
+function applyPlaceholders(entry, substitutions) {
+  let msg = entry.message;
+  const ph = entry.placeholders || {};
+  const subs = Array.isArray(substitutions) ? substitutions : substitutions != null ? [substitutions] : [];
+
+  for (const [name, def] of Object.entries(ph)) {
+    const token = "$" + name.toUpperCase() + "$";
+    if (!msg.includes(token)) continue;
+    const content = (def && def.content) || "";
+    const m = content.match(/^\$(\d+)$/);
+    let value = content;
+    if (m) {
+      const idx = parseInt(m[1], 10) - 1; // $1 → index 0
+      value = idx >= 0 && idx < subs.length ? subs[idx] : "";
+    }
+    msg = msg.split(token).join(value);
+  }
+  return msg;
+}
+
+// 遍历 DOM 填充文案
+function applyI18nToDom() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = i18n(el.getAttribute("data-i18n"));
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.placeholder = i18n(el.getAttribute("data-i18n-placeholder"));
+  });
+}
+
+// 同步下拉框的选中值到 currentLang
+function syncLangSelect() {
+  if (langSelect && SUPPORTED_LANGS.includes(currentLang)) {
+    langSelect.value = currentLang;
+  }
+}
+
+// 用户切换语言：保存 → 更新 currentLang → 重新渲染整个界面
+async function changeLang(newLang) {
+  if (!SUPPORTED_LANGS.includes(newLang) || newLang === currentLang) return;
+  currentLang = newLang;
+  try {
+    await chrome.storage.local.set({ lang: newLang });
+  } catch (e) {
+    // 存储失败不影响本次切换
+  }
+  syncLangSelect();
+  applyI18nToDom();
+  // 若已有转换结果，结果标题也要跟着换语言
+  if (resultWrapper && !resultWrapper.classList.contains("hidden")) {
+    renderResult();
+  }
+}
+
+if (langSelect) {
+  langSelect.addEventListener("change", () => changeLang(langSelect.value));
+}
+
+// ===================================================
+// 1. 初始化：加载语言 → 套用 → 再填当前标签页 URL
 // ===================================================
 (async function init() {
+  // 先加载语言资源，避免界面闪现旧语言
+  await loadAllMessages();
+  currentLang = await detectInitialLang();
+  syncLangSelect();
+  applyI18nToDom();
+
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url && /^https?:\/\//i.test(tab.url)) {
@@ -56,13 +200,13 @@ btnDownload.addEventListener("click", downloadResult);
 async function convert(format) {
   const rawUrl = urlInput.value.trim();
   if (!rawUrl) {
-    showError("请先输入或粘贴一个网址");
+    showError(i18n("err_empty_url"));
     return;
   }
 
   const targetUrl = normalizeUrl(rawUrl);
   if (!targetUrl) {
-    showError("网址格式不正确，请以 http:// 或 https:// 开头");
+    showError(i18n("err_bad_url"));
     return;
   }
 
@@ -135,9 +279,9 @@ async function convert(format) {
 
     renderResult();
     if (current.source === "local") {
-      showLocal("转换完成（本地模式：远程被反爬挡住，已用浏览器本地抓取）");
+      showLocal(i18n("status_local"));
     } else {
-      showInfo("转换完成 ✓");
+      showInfo(i18n("status_success"));
     }
   } catch (err) {
     handleError(err);
@@ -182,18 +326,18 @@ async function fallbackToLocal(targetUrl) {
     // 通过 background service worker 抓取（扩展特权，不受 CORS 限制）
     const resp = await chrome.runtime.sendMessage({ action: "fetchPage", url: targetUrl });
     if (!resp || !resp.ok) {
-      const detail = resp && resp.error ? resp.error : "未知错误";
-      throw new ConvError("本地抓取失败：" + detail, (resp && resp.status) || 0);
+      const detail = resp && resp.error ? resp.error : i18n("err_unknown");
+      throw new ConvError(i18n("err_local_fetch", [detail]), (resp && resp.status) || 0);
     }
     html = resp.html || "";
   } catch (e) {
     // 本地也失败：抛出友好错误
     if (e instanceof ConvError) throw e;
-    throw new ConvError("该页面本地也无法抓取（可能需要登录或被反爬）", 0);
+    throw new ConvError(i18n("err_local_unreachable"), 0);
   }
 
   if (!html || !html.trim()) {
-    throw new ConvError("抓取到的页面内容为空", 0);
+    throw new ConvError(i18n("err_empty_content"), 0);
   }
 
   // 解析标题
@@ -203,7 +347,7 @@ async function fallbackToLocal(targetUrl) {
 
   // 转 markdown
   if (typeof TurndownService === "undefined") {
-    throw new ConvError("本地转换库未加载", 0);
+    throw new ConvError(i18n("err_no_lib"), 0);
   }
   const td = new TurndownService({
     headingStyle: "atx",
@@ -233,7 +377,7 @@ async function fallbackToLocal(targetUrl) {
 
   // 再次自检：本地结果若仍是反爬页，明确报错
   if (isBlocked(markdown, null)) {
-    throw new ConvError("该页面开了反爬验证（如 Cloudflare），本地也无法获取正文", 0);
+    throw new ConvError(i18n("err_blocked_local"), 0);
   }
 
   return { markdown, title };
@@ -267,9 +411,9 @@ async function fetchWithTimeout(url, options, timeoutMs) {
     if (!res.ok) {
       // 常见：429 = 超出 IP 限速 20 RPM
       if (res.status === 429) {
-        throw new ConvError("请求过于频繁，免费 IP 限速 20 次/分钟，请稍候再试", 429);
+        throw new ConvError(i18n("err_rate_limit"), 429);
       }
-      throw new ConvError(`网络错误：HTTP ${res.status}`, res.status);
+      throw new ConvError(i18n("err_http", [String(res.status)]), res.status);
     }
 
     // 根据 options 中的 Accept 判断如何解析
@@ -279,7 +423,7 @@ async function fetchWithTimeout(url, options, timeoutMs) {
     return await res.text();
   } catch (err) {
     if (err.name === "AbortError") {
-      throw new ConvError("请求超时（30 秒），请检查网络或稍后再试", 0);
+      throw new ConvError(i18n("err_timeout"), 0);
     }
     throw err;
   } finally {
@@ -291,7 +435,7 @@ async function fetchWithTimeout(url, options, timeoutMs) {
 // 渲染结果
 // ===================================================
 function renderResult() {
-  resultTitle.textContent = current.format === "json" ? "JSON 结果" : "Markdown 结果";
+  resultTitle.textContent = current.format === "json" ? i18n("result_title_json") : i18n("result_title_md");
   result.textContent = current.content;
   resultWrapper.classList.remove("hidden");
 }
@@ -308,8 +452,8 @@ async function copyResult() {
   if (!current.content) return;
   try {
     await navigator.clipboard.writeText(current.content);
-    showInfo("已复制到剪贴板 ✓");
-  } catch (e) {
+    showInfo(i18n("status_copied"));
+  } catch (c) {
     // 某些环境下 clipboard API 不可用，降级
     try {
       result.focus();
@@ -320,9 +464,9 @@ async function copyResult() {
       sel.addRange(range);
       document.execCommand("copy");
       sel.removeAllRanges();
-      showInfo("已复制到剪贴板 ✓");
-    } catch (e2) {
-      showError("复制失败，请手动选中结果复制");
+      showInfo(i18n("status_copied"));
+    } catch (c2) {
+      showError(i18n("err_copy_failed"));
     }
   }
 }
@@ -346,9 +490,9 @@ function downloadResult() {
       // 下载发起后释放对象 URL
       setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
       if (chrome.runtime.lastError || downloadId === undefined) {
-        showError("下载失败：" + (chrome.runtime.lastError?.message || "未知错误"));
+        showError(i18n("err_download_failed", [chrome.runtime.lastError?.message || i18n("err_unknown")]));
       } else {
-        showInfo("已开始下载：" + filename);
+        showInfo(i18n("status_download_started", [filename]));
       }
     }
   );
@@ -361,7 +505,8 @@ function setLoading(isLoading) {
   [btnMarkdown, btnJson].forEach((b) => (b.disabled = isLoading));
   if (isLoading) {
     statusBox.className = "status-box status-info";
-    statusBox.innerHTML = '<span class="spinner"></span><span>正在转换，请稍候…</span>';
+    statusBox.innerHTML =
+      '<span class="spinner"></span><span>' + i18n("status_loading") + "</span>";
     statusBox.classList.remove("hidden");
   }
 }
@@ -388,9 +533,9 @@ function handleError(err) {
   if (err instanceof ConvError) {
     showError(err.message);
   } else if (err instanceof TypeError && /Failed to fetch|NetworkError/i.test(err.message)) {
-    showError("无法连接转换服务，请检查网络后重试");
+    showError(i18n("err_no_service"));
   } else {
-    showError("转换失败：" + (err && err.message ? err.message : String(err)));
+    showError(i18n("err_generic", [(err && err.message) ? err.message : String(err)]));
   }
 }
 

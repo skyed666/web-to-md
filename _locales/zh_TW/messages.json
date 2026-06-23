@@ -1,0 +1,132 @@
+{
+  "ext_name": {
+    "message": "網頁轉換器 - Markdown / JSON"
+  },
+  "ext_description": {
+    "message": "一鍵將任意網頁轉換為乾淨的 Markdown 或 JSON，直接餵給 AI/LLM。Chrome 與 Edge 通用。"
+  },
+  "ext_title": {
+    "message": "網頁轉換器 - Markdown / JSON"
+  },
+  "header_title": {
+    "message": "網頁轉換器"
+  },
+  "badge": {
+    "message": "免費 · 無後端"
+  },
+  "label_url": {
+    "message": "目標網址"
+  },
+  "placeholder_url": {
+    "message": "https://example.com"
+  },
+  "btn_markdown": {
+    "message": "轉 Markdown"
+  },
+  "btn_json": {
+    "message": "轉 JSON"
+  },
+  "result_title_md": {
+    "message": "Markdown 結果"
+  },
+  "result_title_json": {
+    "message": "JSON 結果"
+  },
+  "btn_copy": {
+    "message": "複製"
+  },
+  "btn_download": {
+    "message": "下載"
+  },
+  "footer": {
+    "message": "使用您的 IP 直接請求轉換服務，限速 20 次/分鐘，無需後端"
+  },
+  "footer_lang_note": {
+    "message": "擴充功能名稱等跟隨瀏覽器語言"
+  },
+  "status_loading": {
+    "message": "正在轉換，請稍候…"
+  },
+  "status_success": {
+    "message": "轉換完成 ✓"
+  },
+  "status_local": {
+    "message": "轉換完成（本地模式：遠端被反爬擋住，已用瀏覽器本地抓取）"
+  },
+  "status_copied": {
+    "message": "已複製到剪貼簿 ✓"
+  },
+  "status_download_started": {
+    "message": "已開始下載：$FILENAME$",
+    "placeholders": {
+      "filename": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_empty_url": {
+    "message": "請先輸入或貼上一個網址"
+  },
+  "err_bad_url": {
+    "message": "網址格式不正確，請以 http:// 或 https:// 開頭"
+  },
+  "err_rate_limit": {
+    "message": "請求過於頻繁，免費 IP 限速 20 次/分鐘，請稍候再試"
+  },
+  "err_http": {
+    "message": "網路錯誤：HTTP $STATUS$",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_timeout": {
+    "message": "請求逾時（30 秒），請檢查網路或稍後再試"
+  },
+  "err_no_service": {
+    "message": "無法連接轉換服務，請檢查網路後重試"
+  },
+  "err_local_fetch": {
+    "message": "本地抓取失敗：$DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_local_unreachable": {
+    "message": "此網頁本地也無法抓取（可能需要登入或被反爬）"
+  },
+  "err_empty_content": {
+    "message": "抓取到的網頁內容為空"
+  },
+  "err_no_lib": {
+    "message": "本地轉換庫未載入"
+  },
+  "err_blocked_local": {
+    "message": "此網頁開啟了反爬驗證（如 Cloudflare），本地也無法取得正文"
+  },
+  "err_copy_failed": {
+    "message": "複製失敗，請手動選取結果複製"
+  },
+  "err_download_failed": {
+    "message": "下載失敗：$DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_generic": {
+    "message": "轉換失敗：$DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_unknown": {
+    "message": "未知錯誤"
+  }
+}

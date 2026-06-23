@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>网页转换器 - Markdown / JSON</title>
+  <title data-i18n="ext_title">网页转换器 - Markdown / JSON</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
@@ -14,29 +14,38 @@
           <rect x="2" y="2" width="20" height="20" rx="5" fill="#4f46e5"/>
           <path d="M9 16V8l3 4 3-4v8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <h1>网页转换器</h1>
+        <h1><span data-i18n="header_title">网页转换器</span></h1>
       </div>
-      <span class="badge">免费</span>
+      <div class="header-right">
+        <span class="badge" data-i18n="badge">免费 · 无后端</span>
+        <select id="langSelect" class="lang-select" title="Language">
+          <option value="zh_CN">简体中文</option>
+          <option value="en">English</option>
+          <option value="zh_TW">繁體中文</option>
+          <option value="ja">日本語</option>
+        </select>
+      </div>
     </header>
 
     <section class="form">
-      <label class="label" for="urlInput">目标网址</label>
+      <label class="label" for="urlInput" data-i18n="label_url">目标网址</label>
       <div class="url-row">
         <input
           id="urlInput"
           type="text"
           class="input"
           placeholder="https://example.com"
+          data-i18n-placeholder="placeholder_url"
           spellcheck="false"
           autocomplete="off"
         />
       </div>
 
       <div class="format-buttons">
-        <button id="btnMarkdown" class="btn btn-primary" type="button">
+        <button id="btnMarkdown" class="btn btn-primary" type="button" data-i18n="btn_markdown">
           转 Markdown
         </button>
-        <button id="btnJson" class="btn btn-secondary" type="button">
+        <button id="btnJson" class="btn btn-secondary" type="button" data-i18n="btn_json">
           转 JSON
         </button>
       </div>
@@ -51,13 +60,15 @@
       </div>
       <pre id="result" class="result" tabindex="0"></pre>
       <div class="action-buttons">
-        <button id="btnCopy" class="btn btn-ghost" type="button">复制</button>
-        <button id="btnDownload" class="btn btn-ghost" type="button">下载</button>
+        <button id="btnCopy" class="btn btn-ghost" type="button" data-i18n="btn_copy">复制</button>
+        <button id="btnDownload" class="btn btn-ghost" type="button" data-i18n="btn_download">下载</button>
       </div>
     </section>
 
     <footer class="footer">
-      使用您的 IP 直接请求转换服务，限速 20 次/分钟，无需后端
+      <span data-i18n="footer">使用您的 IP 直接请求转换服务，限速 20 次/分钟，无需后端</span>
+      <br />
+      <span class="footer-note" data-i18n="footer_lang_note">扩展名称跟随浏览器语言</span>
     </footer>
   </div>
 

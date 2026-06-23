@@ -1,11 +1,8 @@
 # 网页转换器 - Markdown / JSON
 
-一个纯前端的浏览器扩展，一键将任意网页转换为 **Markdown** 或 **JSON**。
+一个浏览器扩展，一键将任意网页转换为 **Markdown** 或 **JSON**。
 **使用您的本机 IP 直接调用转换服务，无后端、无需 API Key**。
 兼容 **Google Chrome** 与 **Microsoft Edge**。
-
-> 源码已做轻度混淆：目标服务地址以 base64 形式存储、运行时解码，源码中不再明文出现。
-> （注：浏览器「网络面板」中的实际请求地址无法隐藏，这是纯前端方案的固有约束。）
 
 ---
 
@@ -15,7 +12,9 @@
 - 🧾 网页 → **JSON**（原生包裹格式：`{title, url, content, ...}`）
 - 📋 一键复制到剪贴板
 - 💾 一键下载为 `.md` / `.json` 文件
-- 🔒 纯前端，零后端，无数据收集
+- 🛡️ 智能混合抓取：被反爬挡住时自动切换本地模式
+- 🌍 多语言界面：简体中文 / English / 繁體中文 / 日本語
+- 🔒 无后端，不收集个人数据
 - 🆓 免费档：按 IP 计费，**20 次/分钟**
 
 ## 📦 项目结构
@@ -28,6 +27,11 @@ web-to-md/
 ├── popup.js               # 核心逻辑（取 URL / 调 API / 复制 / 下载）
 ├── background.js          # service worker（本地抓取，绕过 CORS）
 ├── lib/turndown.js        # HTML→Markdown 转换库
+├── _locales/              # 多语言文案
+│   ├── en/messages.json
+│   ├── zh_CN/messages.json
+│   ├── zh_TW/messages.json
+│   └── ja/messages.json
 ├── generate-icons.ps1     # 图标生成脚本（一次性，可选）
 ├── icons/
 │   ├── icon16.png
@@ -66,12 +70,27 @@ web-to-md/
 
 | 项目 | 说明 |
 |------|------|
-| 端点 | 以 base64 存储于 `popup.js`，运行时 `atob()` 解码 |
+| 端点 | `https://r.jina.ai/{目标URL}`（Jina AI Reader API） |
 | Markdown | 直接 GET，返回纯文本 |
 | JSON | GET + 请求头 `Accept: application/json`，返回 `{code, status, data:{title,url,content,...}}` |
 | 计费 | 无 API Key 时按调用方 IP 计费，**20 RPM 免费** |
-| 跨域 | 已在 `manifest.json` 声明对应 host_permissions，可直接 `fetch` |
+| 本地回退 | 远程被反爬挡住时，由 background service worker 直接抓取目标页 HTML（绕过 CORS），再用 turndown 本地转 Markdown |
 | 后端 | **无**。所有请求由浏览器从你的 IP 发出 |
+
+## 🌍 多语言（i18n）
+
+扩展根据用户浏览器的界面语言自动切换：
+
+| 语言 | 目录 | 说明 |
+|------|------|------|
+| English（默认回退） | `_locales/en/` | `default_locale`，其它语言无匹配时回退到此 |
+| 简体中文 | `_locales/zh_CN/` |  |
+| 繁體中文 | `_locales/zh_TW/` |  |
+| 日本語 | `_locales/ja/` |  |
+
+- 添加新语言：复制 `_locales/en/messages.json` 到 `_locales/<新locale>/`，翻译后即可生效。
+- manifest 中 `name` / `description` / `default_title` 用 `__MSG_xxx__` 占位符引用对应 key。
+- 界面文案用 `data-i18n` / `data-i18n-placeholder` 属性标记，由 `popup.js` 的 `applyI18n()` 在启动时填充。
 
 ## ⚙️ 重新生成图标（可选）
 

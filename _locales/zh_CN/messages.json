@@ -1,0 +1,132 @@
+{
+  "ext_name": {
+    "message": "网页转换器 - Markdown / JSON"
+  },
+  "ext_description": {
+    "message": "一键将任意网页转换为干净的 Markdown 或 JSON，直接喂给 AI/LLM。Chrome 与 Edge 通用。"
+  },
+  "ext_title": {
+    "message": "网页转换器 - Markdown / JSON"
+  },
+  "header_title": {
+    "message": "网页转换器"
+  },
+  "badge": {
+    "message": "免费 · 无后端"
+  },
+  "label_url": {
+    "message": "目标网址"
+  },
+  "placeholder_url": {
+    "message": "https://example.com"
+  },
+  "btn_markdown": {
+    "message": "转 Markdown"
+  },
+  "btn_json": {
+    "message": "转 JSON"
+  },
+  "result_title_md": {
+    "message": "Markdown 结果"
+  },
+  "result_title_json": {
+    "message": "JSON 结果"
+  },
+  "btn_copy": {
+    "message": "复制"
+  },
+  "btn_download": {
+    "message": "下载"
+  },
+  "footer": {
+    "message": "使用您的 IP 直接请求转换服务，限速 20 次/分钟，无需后端"
+  },
+  "footer_lang_note": {
+    "message": "扩展名称等跟随浏览器语言"
+  },
+  "status_loading": {
+    "message": "正在转换，请稍候…"
+  },
+  "status_success": {
+    "message": "转换完成 ✓"
+  },
+  "status_local": {
+    "message": "转换完成（本地模式：远程被反爬挡住，已用浏览器本地抓取）"
+  },
+  "status_copied": {
+    "message": "已复制到剪贴板 ✓"
+  },
+  "status_download_started": {
+    "message": "已开始下载：$FILENAME$",
+    "placeholders": {
+      "filename": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_empty_url": {
+    "message": "请先输入或粘贴一个网址"
+  },
+  "err_bad_url": {
+    "message": "网址格式不正确，请以 http:// 或 https:// 开头"
+  },
+  "err_rate_limit": {
+    "message": "请求过于频繁，免费 IP 限速 20 次/分钟，请稍候再试"
+  },
+  "err_http": {
+    "message": "网络错误：HTTP $STATUS$",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_timeout": {
+    "message": "请求超时（30 秒），请检查网络或稍后再试"
+  },
+  "err_no_service": {
+    "message": "无法连接转换服务，请检查网络后重试"
+  },
+  "err_local_fetch": {
+    "message": "本地抓取失败：$DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_local_unreachable": {
+    "message": "该页面本地也无法抓取（可能需要登录或被反爬）"
+  },
+  "err_empty_content": {
+    "message": "抓取到的页面内容为空"
+  },
+  "err_no_lib": {
+    "message": "本地转换库未加载"
+  },
+  "err_blocked_local": {
+    "message": "该页面开了反爬验证（如 Cloudflare），本地也无法获取正文"
+  },
+  "err_copy_failed": {
+    "message": "复制失败，请手动选中结果复制"
+  },
+  "err_download_failed": {
+    "message": "下载失败：$DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_generic": {
+    "message": "转换失败：$DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1"
+      }
+    }
+  },
+  "err_unknown": {
+    "message": "未知错误"
+  }
+}

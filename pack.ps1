@@ -12,7 +12,7 @@ $includeFiles = @(
     "popup.js",
     "background.js"
 )
-$includeDirs = @("icons", "lib")
+$includeDirs = @("icons", "lib", "_locales")
 
 # 排除（不上传进扩展包，商店审核不需要）
 # - README.md, ATTRIBUTION.md, STORE_LISTING.md  开发文档

@@ -1,0 +1,51 @@
+{
+  "ext_name": {
+    "message": "Web to Markdown / JSON"
+  },
+  "ext_description": {
+    "message": "ウェブページをワンクリックで Markdown または JSON に変換。AI/LLM に直接入力できます。Chrome・Edge 対応。"
+  },
+  "ext_title": {
+    "message": "Web to Markdown / JSON"
+  },
+
+  "header_title": { "message": "Web 変換" },
+  "badge": { "message": "無料・バックエンドなし" },
+  "label_url": { "message": "対象 URL" },
+  "placeholder_url": { "message": "https://example.com" },
+  "btn_markdown": { "message": "Markdown に変換" },
+  "btn_json": { "message": "JSON に変換" },
+  "result_title_md": { "message": "Markdown の結果" },
+  "result_title_json": { "message": "JSON の結果" },
+  "btn_copy": { "message": "コピー" },
+  "btn_download": { "message": "ダウンロード" },
+  "footer": {
+    "message": "あなたの IP から変換サービスへ直接リクエストします。制限：20 回/分。バックエンドなし。"
+  },
+  "footer_lang_note": {
+    "message": "拡張機能名などはブラウザの言設定に従います。"
+  },
+
+  "status_loading": { "message": "変換中です。お待ちください…" },
+  "status_success": { "message": "変換完了 ✓" },
+  "status_local": {
+    "message": "変換完了（ローカルモード：リモートがブロックされたため、ブラウザでローカル取得しました）"
+  },
+  "status_copied": { "message": "クリップボードにコピーしました ✓" },
+  "status_download_started": { "message": "ダウンロードを開始しました：$FILENAME$", "placeholders": { "filename": { "content": "$1" } } },
+  "err_empty_url": { "message": "URL を入力または貼り付けてください" },
+  "err_bad_url": { "message": "URL の形式が正しくありません。http:// または https:// で始めてください" },
+  "err_rate_limit": { "message": "リクエストが多すぎます。無料枠の制限は 20 回/分です。しばらく待って再試行してください。" },
+  "err_http": { "message": "ネットワークエラー：HTTP $STATUS$", "placeholders": { "status": { "content": "$1" } } },
+  "err_timeout": { "message": "リクエストがタイムアウトしました（30 秒）。ネットワークを確認して再試行してください。" },
+  "err_no_service": { "message": "変換サービスに接続できません。ネットワークを確認して再試行してください。" },
+  "err_local_fetch": { "message": "ローカル取得に失敗しました：$DETAIL$","placeholders": { "detail": { "content": "$1" } } },
+  "err_local_unreachable": { "message": "このページはローカルでも取得できません（ログインが必要か、ボット対策が有効な可能性があります）。" },
+  "err_empty_content": { "message": "取得したページの内容が空です。" },
+  "err_no_lib": { "message": "ローカル変換ライブラリが読み込まれていません。" },
+  "err_blocked_local": { "message": "このページはボット対策（例：Cloudflare）で保護されています。ローカルモードでも本文を取得できません。" },
+  "err_copy_failed": { "message": "コピーに失敗しました。結果を手動で選択してコピーしてください。" },
+  "err_download_failed": { "message": "ダウンロードに失敗しました：$DETAIL$","placeholders": { "detail": { "content": "$1" } } },
+  "err_generic": { "message": "変換に失敗しました：$DETAIL$","placeholders": { "detail": { "content": "$1" } } },
+  "err_unknown": { "message": "不明なエラー" }
+}
