@@ -15,8 +15,11 @@ let current = {
   format: null,        // "markdown" | "json"
   content: "",         // 展示/复制/下载的文本
   filename: "result",  // 下载文件名（无扩展名）
-  source: null,        // "remote" | "local" —— 标记结果来源
+  source: null,        // "remote" | "local" | "selection" —— 标记结果来源
 };
+
+// 启动时从 background 读到的选中文本（若有）
+let pendingSelection = "";
 
 // ===== 常量 =====
 // Jina AI Reader API 端点（明文，便于商店审核透明化）
@@ -171,6 +174,17 @@ if (langSelect) {
   syncLangSelect();
   applyI18nToDom();
 
+  // 读取当前页选中文本（用于"选中即转"）
+  try {
+    const resp = await chrome.runtime.sendMessage({ action: "getSelection" });
+    if (resp && resp.ok && typeof resp.text === "string" && resp.text.trim()) {
+      pendingSelection = resp.text.trim();
+      showSelectionBar(pendingSelection.length);
+    }
+  } catch (e) {
+    // background 暂时不可用或注入失败，按整页处理
+  }
+
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url && /^https?:\/\//i.test(tab.url)) {
@@ -179,7 +193,26 @@ if (langSelect) {
   } catch (e) {
     // 某些页面（如 chrome:// 内部页）无法读取，忽略即可
   }
-  urlInput.focus();
+
+  // 检查是否由快捷键触发（background 写入的 pendingCommand）
+  let autoFmt = null;
+  try {
+    const stored = await chrome.storage.session.get("pendingCommand");
+    if (stored.pendingCommand === "md" || stored.pendingCommand === "json") {
+      autoFmt = stored.pendingCommand === "md" ? "markdown" : "json";
+      // 用完即清，避免下次开弹窗又自动转
+      await chrome.storage.session.remove("pendingCommand");
+    }
+  } catch (e) {
+    // session storage 读取失败忽略
+  }
+
+  if (autoFmt) {
+    // 快捷键触发：直接转换，不抢焦点
+    convert(autoFmt);
+  } else {
+    urlInput.focus();
+  }
 })();
 
 // ===================================================
@@ -198,6 +231,12 @@ btnDownload.addEventListener("click", downloadResult);
 // 核心转换函数（混合方案：先试远程服务，被反爬挡住则本地回退）
 // ===================================================
 async function convert(format) {
+  // 若启动时读到了选中文本，优先只转选中部分
+  if (pendingSelection) {
+    convertSelection(pendingSelection, format);
+    return;
+  }
+
   const rawUrl = urlInput.value.trim();
   if (!rawUrl) {
     showError(i18n("err_empty_url"));
@@ -288,6 +327,93 @@ async function convert(format) {
   } finally {
     setLoading(false);
   }
+}
+
+// ===================================================
+// 选中文本转换：直接用用户选中的文本，不走远程/本地抓取
+// ===================================================
+function convertSelection(text, format) {
+  if (!text || !text.trim()) {
+    showError(i18n("err_no_selection"));
+    // 清空 pendingSelection，下次点转换就走整页流程
+    pendingSelection = "";
+    hideSelectionBar();
+    return;
+  }
+
+  setLoading(true);
+  hideResult();
+  hideSelectionBar();
+  // 用完即清，避免下次开弹窗仍走选中分支
+  pendingSelection = "";
+
+  try {
+    const cleaned = text.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+
+    if (format === "json") {
+      const payload = {
+        title: "",
+        description: "",
+        url: "",
+        content: cleaned,
+      };
+      current.content = JSON.stringify(payload, null, 2);
+      current.format = "json";
+    } else {
+      current.content = cleaned;
+      current.format = "markdown";
+    }
+    current.filename = "selection";
+    current.source = "selection";
+    resultMeta.textContent = "";
+
+    renderResult();
+    showInfo(i18n("status_success"));
+  } catch (err) {
+    handleError(err);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ===================================================
+// 选中文本提示条
+// ===================================================
+function showSelectionBar(charCount) {
+  const bar = document.getElementById("selectionBar");
+  if (!bar) return;
+  bar.textContent = i18n("selection_bar", [String(charCount)]);
+  bar.classList.remove("hidden");
+}
+
+function hideSelectionBar() {
+  const bar = document.getElementById("selectionBar");
+  if (bar) bar.classList.add("hidden");
+}
+
+// ===================================================
+// Token 估算：CJK 字符 ≈ 1 token；其它字符 ≈ 4 字符/token
+// 经验值，接近 GPT 分词器，非精确值
+// ===================================================
+function estimateTokens(text) {
+  if (!text) return 0;
+  let cjk = 0;
+  let other = 0;
+  for (const ch of text) {
+    const code = ch.codePointAt(0);
+    // CJK 统一汉字、平假名/片假名、韩文音节
+    if (
+      (code >= 0x4e00 && code <= 0x9fff) ||
+      (code >= 0x3040 && code <= 0x30ff) ||
+      (code >= 0xac00 && code <= 0xd7af) ||
+      (code >= 0x3400 && code <= 0x4dbf)
+    ) {
+      cjk++;
+    } else {
+      other++;
+    }
+  }
+  return Math.ceil(cjk + other / 4);
 }
 
 // ===================================================
@@ -438,6 +564,14 @@ function renderResult() {
   resultTitle.textContent = current.format === "json" ? i18n("result_title_json") : i18n("result_title_md");
   result.textContent = current.content;
   resultWrapper.classList.remove("hidden");
+
+  // 追加 token / 字数预估到元信息区（保留之前可能设置的源 URL）
+  const tokens = estimateTokens(current.content || "");
+  const chars = (current.content || "").length;
+  const meta = i18n("result_meta", [String(tokens), String(chars)]);
+  // 若已有源 URL（整页转换），用分隔符衔接；选中模式无 URL，只显示统计
+  const existing = resultMeta.textContent;
+  resultMeta.textContent = existing ? existing + " · " + meta : meta;
 }
 
 function hideResult() {

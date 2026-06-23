@@ -47,5 +47,21 @@
   "err_copy_failed": { "message": "コピーに失敗しました。結果を手動で選択してコピーしてください。" },
   "err_download_failed": { "message": "ダウンロードに失敗しました：$DETAIL$","placeholders": { "detail": { "content": "$1" } } },
   "err_generic": { "message": "変換に失敗しました：$DETAIL$","placeholders": { "detail": { "content": "$1" } } },
-  "err_unknown": { "message": "不明なエラー" }
+  "err_unknown": { "message": "不明なエラー" },
+
+  "cmd_md": { "message": "現在のページを Markdown に変換" },
+  "cmd_json": { "message": "現在のページを JSON に変換" },
+  "hint_selection": { "message": "💡 ページで文字を選択してからこの拡張機能を開くと、選択部分だけ変換します。ショートカット：Ctrl+Shift+M。" },
+  "selection_bar": {
+    "message": "📝 選択範囲を変換（$N$ 文字）",
+    "placeholders": { "n": { "content": "$1" } }
+  },
+  "err_no_selection": { "message": "選択されたテキストが空です。ページ全体を変換します。" },
+  "result_meta": {
+    "message": "≈ $TOKENS$ tokens · $CHARS$ 文字",
+    "placeholders": {
+      "tokens": { "content": "$1" },
+      "chars": { "content": "$2" }
+    }
+  }
 }

@@ -62,5 +62,21 @@
     "message": "Conversion failed: $DETAIL$",
     "placeholders": { "detail": { "content": "$1" } }
   },
-  "err_unknown": { "message": "Unknown error" }
+  "err_unknown": { "message": "Unknown error" },
+
+  "cmd_md": { "message": "Convert current page to Markdown" },
+  "cmd_json": { "message": "Convert current page to JSON" },
+  "hint_selection": { "message": "💡 Select text on the page before opening this extension to convert only the selection. Shortcut: Ctrl+Shift+M." },
+  "selection_bar": {
+    "message": "📝 Converting selection ($N$ chars)",
+    "placeholders": { "n": { "content": "$1" } }
+  },
+  "err_no_selection": { "message": "Selected text is empty. Will convert the full page." },
+  "result_meta": {
+    "message": "≈ $TOKENS$ tokens · $CHARS$ chars",
+    "placeholders": {
+      "tokens": { "content": "$1" },
+      "chars": { "content": "$2" }
+    }
+  }
 }

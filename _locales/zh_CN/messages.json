@@ -128,5 +128,29 @@
   },
   "err_unknown": {
     "message": "未知错误"
+  },
+
+  "cmd_md": {
+    "message": "将当前网页转为 Markdown"
+  },
+  "cmd_json": {
+    "message": "将当前网页转为 JSON"
+  },
+  "hint_selection": {
+    "message": "💡 先在网页上选中文字，再打开本扩展，将只转换选中部分。快捷键：Ctrl+Shift+M。"
+  },
+  "selection_bar": {
+    "message": "📝 转换选中文本（$N$ 字）",
+    "placeholders": { "n": { "content": "$1" } }
+  },
+  "err_no_selection": {
+    "message": "选中的文本为空，将转换整个页面"
+  },
+  "result_meta": {
+    "message": "≈ $TOKENS$ tokens · $CHARS$ 字",
+    "placeholders": {
+      "tokens": { "content": "$1" },
+      "chars": { "content": "$2" }
+    }
   }
 }

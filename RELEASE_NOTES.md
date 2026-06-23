@@ -5,6 +5,66 @@
 
 ---
 
+## v1.1.0
+
+### 简体中文（zh_CN）
+
+```
+v1.1.0
+
+🆕 新增：
+• 选中文本转换：选中网页里的一段，只转选中部分（弹窗会提示选中字数）
+• 快捷键：Ctrl+Shift+M 转 Markdown、Ctrl+Shift+J 转 JSON（可在浏览器扩展快捷键设置里改）
+• Token 预估：转换后显示约多少 tokens / 字数，方便喂给 AI
+
+⚡ 优化：
+• 智能选区优先：有选中就转选中，无选中才转整页
+```
+
+### English (en)
+
+```
+v1.1.0
+
+🆕 New:
+• Selection conversion: select text on a page and convert only that part (popup shows the char count)
+• Keyboard shortcuts: Ctrl+Shift+M for Markdown, Ctrl+Shift+J for JSON (customizable in browser extension shortcuts)
+• Token estimate: shows approximate tokens / char count after conversion, handy for AI input
+
+⚡ Improved:
+• Smart selection priority: converts selection if any, else the full page
+```
+
+### 繁體中文（zh_TW）
+
+```
+v1.1.0
+
+🆕 新增：
+• 選取文字轉換：選取網頁裡的一段，只轉選取部分（彈窗會提示選取字數）
+• 快捷鍵：Ctrl+Shift+M 轉 Markdown、Ctrl+Shift+J 轉 JSON（可在瀏覽器擴充功能快捷鍵設定改）
+• Token 預估：轉換後顯示約多少 tokens / 字數，方便餵給 AI
+
+⚡ 最佳化：
+• 智慧選取優先：有選取就轉選取，無選取才轉整頁
+```
+
+### 日本語（ja）
+
+```
+v1.1.0
+
+🆕 新機能：
+• 選択範囲変換：ページ内の文字を選択すると、その部分だけ変換（文字数も表示）
+• ショートカットキー：Ctrl+Shift+M で Markdown、Ctrl+Shift+J で JSON（ブラウザの拡張機能ショートカットで変更可能）
+• Token 推定：変換後に概算 tokens / 文字数を表示、AI 入力に便利
+
+⚡ 改善：
+• スマート選択優先：選択があればそれを変換、なければページ全体
+```
+
+---
+
 ## v1.0.0 首版发布
 
 ### 简体中文（zh_CN）

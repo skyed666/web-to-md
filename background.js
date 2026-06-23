@@ -18,9 +18,71 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // 关键：返回 true 表示异步 sendResponse
     return true;
   }
+
+  // 读取当前标签页的选中文本（用 chrome.scripting 注入）
+  if (msg && msg.action === "getSelection") {
+    getSelectionText()
+      .then((text) => sendResponse({ ok: true, text }))
+      .catch((err) =>
+        sendResponse({
+          ok: false,
+          error: err && err.message ? err.message : String(err),
+          text: "",
+        })
+      );
+    return true;
+  }
+
   // 未识别的消息：不处理
   return false;
 });
+
+// ===================================================
+// 快捷键命令：打开弹窗并标记意图（md / json）
+// ===================================================
+chrome.commands.onCommand.addListener((command) => {
+  let fmt = null;
+  if (command === "convert-md") fmt = "md";
+  else if (command === "convert-json") fmt = "json";
+  if (!fmt) return;
+
+  // 用 session storage 把意图传给 popup（弹窗一打开就读）
+  chrome.storage.session
+    .set({ pendingCommand: fmt })
+    .then(() => {
+      // 打开扩展弹窗（Chrome 127+ 支持；旧版本会静默失败，快捷键退化为无反应）
+      if (chrome.action && typeof chrome.action.openPopup === "function") {
+        chrome.action.openPopup(() => {
+          if (chrome.runtime.lastError) {
+            // openPopup 失败（如旧版本、或弹窗已被其他方式触发），忽略
+          }
+        });
+      }
+    })
+    .catch(() => {
+      // session storage 失败时不影响主流程
+    });
+});
+
+// 读取当前活动标签页里的选中文本
+async function getSelectionText() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab || typeof tab.id !== "number") return "";
+  // 受限页面（chrome:// 等）无法注入，直接返回空
+  if (!/^https?:/i.test(tab.url || "")) return "";
+
+  const results = await chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: () => {
+      const sel = window.getSelection && window.getSelection();
+      return sel ? sel.toString() : "";
+    },
+  });
+  if (Array.isArray(results) && results.length > 0) {
+    return (results[0].result || "").trim();
+  }
+  return "";
+}
 
 async function fetchPage(url) {
   const controller = new AbortController();

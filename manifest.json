@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_ext_name__",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "__MSG_ext_description__",
   "default_locale": "en",
   "author": "Shishi",
@@ -9,7 +9,8 @@
   "permissions": [
     "activeTab",
     "downloads",
-    "storage"
+    "storage",
+    "scripting"
   ],
   "host_permissions": [
     "https://r.jina.ai/*",
@@ -18,6 +19,16 @@
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "commands": {
+    "convert-md": {
+      "suggested_key": { "default": "Ctrl+Shift+M", "mac": "Command+Shift+M" },
+      "description": "__MSG_cmd_md__"
+    },
+    "convert-json": {
+      "suggested_key": { "default": "Ctrl+Shift+J", "mac": "Command+Shift+J" },
+      "description": "__MSG_cmd_json__"
+    }
   },
   "action": {
     "default_popup": "popup.html",

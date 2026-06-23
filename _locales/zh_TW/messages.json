@@ -128,5 +128,29 @@
   },
   "err_unknown": {
     "message": "未知錯誤"
+  },
+
+  "cmd_md": {
+    "message": "將目前網頁轉為 Markdown"
+  },
+  "cmd_json": {
+    "message": "將目前網頁轉為 JSON"
+  },
+  "hint_selection": {
+    "message": "💡 先在網頁上選取文字，再開啟本擴充功能，將只轉換選取部分。快捷鍵：Ctrl+Shift+M。"
+  },
+  "selection_bar": {
+    "message": "📝 轉換選取文字（$N$ 字）",
+    "placeholders": { "n": { "content": "$1" } }
+  },
+  "err_no_selection": {
+    "message": "選取的文字為空，將轉換整個頁面"
+  },
+  "result_meta": {
+    "message": "≈ $TOKENS$ tokens · $CHARS$ 字",
+    "placeholders": {
+      "tokens": { "content": "$1" },
+      "chars": { "content": "$2" }
+    }
   }
 }
